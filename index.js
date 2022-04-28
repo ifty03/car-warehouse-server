@@ -26,6 +26,7 @@ const run = async () => {
   try {
     await client.connect();
     const stokeCollection = client.db("stokedb").collection("stoke");
+    /* get data from database */
     app.get("/stoke", async (req, res) => {
       const query = {};
       const cursor = stokeCollection.find(query);
