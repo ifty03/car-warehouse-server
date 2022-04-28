@@ -21,12 +21,22 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
-client.connect((err) => {
-  const collection = client.db("test").collection("devices");
-  console.log("conected");
-  // perform actions on the collection object
-  client.close();
-});
+
+const run = async () => {
+  try {
+    await client.connect();
+    const stokeCollection = client.db("stokedb").collection("stoke");
+    app.get("/stoke", async (req, res) => {
+      const query = {};
+      const cursor = stokeCollection.find(query);
+      const stokes = await cursor.toArray();
+      res.send(stokes);
+    });
+  } finally {
+    // await client.close()
+  }
+};
+run().catch(console.dir);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
