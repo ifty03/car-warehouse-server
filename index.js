@@ -29,7 +29,7 @@ const run = async () => {
     /* get data from database */
     app.get("/stoke", async (req, res) => {
       const query = {};
-      const cursor = stokeCollection.find(query);
+      const cursor = stokeCollection.find(query).limit(6);
       const stokes = await cursor.toArray();
       res.send(stokes);
     });
