@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 
 /* all middleware */
@@ -26,12 +26,20 @@ const run = async () => {
   try {
     await client.connect();
     const stokeCollection = client.db("stokedb").collection("stoke");
-    /* get data from database */
+    /* get all data from database */
     app.get("/stoke", async (req, res) => {
       const query = {};
       const cursor = stokeCollection.find(query).limit(6);
       const stokes = await cursor.toArray();
       res.send(stokes);
+    });
+
+    /* get one data from database */
+    app.use("/stoke/:id", async (req, res) => {
+      const id = req.params;
+      const query = { _id: ObjectId(id) };
+      const result = await stokeCollection.findOne(query);
+      res.send(result);
     });
   } finally {
     // await client.close()
