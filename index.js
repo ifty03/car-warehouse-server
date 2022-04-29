@@ -36,11 +36,12 @@ const run = async () => {
     /* get all data from database */
     app.get("/manageStoke", async (req, res) => {
       const query = {};
-      const page = req.query.page;
-      const size = req.query.size;
+      const page = +req.query.page;
+      const size = +req.query.size;
+      console.log(page, size);
       const cursor = stokeCollection
         .find(query)
-        .skit(page * size)
+        .skip(page * size)
         .limit(size);
       const stokes = await cursor.toArray();
       res.send(stokes);
