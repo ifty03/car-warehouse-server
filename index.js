@@ -77,6 +77,14 @@ const run = async () => {
       );
       res.send(result);
     });
+
+    /* delete a stoke from db */
+    app.delete("/stoke/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await stokeCollection.deleteOne(query);
+      res.send(result);
+    });
   } finally {
     // await client.close()
   }
