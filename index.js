@@ -26,10 +26,17 @@ const run = async () => {
   try {
     await client.connect();
     const stokeCollection = client.db("stokedb").collection("stoke");
-    /* get all data from database */
+    /* get 6 data from database */
     app.get("/stoke", async (req, res) => {
       const query = {};
       const cursor = stokeCollection.find(query).limit(6);
+      const stokes = await cursor.toArray();
+      res.send(stokes);
+    });
+    /* get all data from database */
+    app.get("/manageStoke", async (req, res) => {
+      const query = {};
+      const cursor = stokeCollection.find(query);
       const stokes = await cursor.toArray();
       res.send(stokes);
     });
