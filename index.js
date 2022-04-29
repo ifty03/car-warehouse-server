@@ -35,23 +35,22 @@ const run = async () => {
     });
 
     /* get one data from database */
-    app.use("/stoke/:id", async (req, res) => {
+    app.get("/stoke/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await stokeCollection.findOne(query);
       res.send(result);
     });
 
-    /* update stoke quantity */
-    app.use("/stoke/:id", async (req, res) => {
+    /* update a stoke */
+    app.put("/stoke/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: ObjectId(id) };
-      const updateQuantity = req?.body;
       const options = { upsert: true };
+      const updateStoke = req.body;
       const updateDoc = {
-        $set: updateQuantity,
+        $set: updateStoke,
       };
-      console.log(updateQuantity);
       const result = await stokeCollection.updateOne(
         filter,
         updateDoc,
