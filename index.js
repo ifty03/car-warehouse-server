@@ -41,6 +41,20 @@ const run = async () => {
       const result = await stokeCollection.findOne(query);
       res.send(result);
     });
+
+    /* replace stoke quantity */
+    app.use("/stoke/:id", async (req, res) => {
+      const id = req.params;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateQuantity = req?.body?.quantity;
+      const updateDoc = {
+        $set: updateQuantity,
+      };
+      console.log(updateQuantity);
+      const result = await movies.updateOne(filter, updateDoc, options);
+      res.send(result);
+    });
   } finally {
     // await client.close()
   }
