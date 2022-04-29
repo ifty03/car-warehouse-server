@@ -36,9 +36,20 @@ const run = async () => {
     /* get all data from database */
     app.get("/manageStoke", async (req, res) => {
       const query = {};
-      const cursor = stokeCollection.find(query);
+      const page = req.query.page;
+      const size = req.query.size;
+      const cursor = stokeCollection
+        .find(query)
+        .skit(page * size)
+        .limit(size);
       const stokes = await cursor.toArray();
       res.send(stokes);
+    });
+
+    /* get stokes quantity from database */
+    app.get("/stokesCount", async (req, res) => {
+      const count = await stokeCollection.estimatedDocumentCount({});
+      res.send({ count });
     });
 
     /* get one data from database */
