@@ -36,7 +36,7 @@ const run = async () => {
 
     /* get one data from database */
     app.use("/stoke/:id", async (req, res) => {
-      const id = req.params;
+      const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await stokeCollection.findOne(query);
       res.send(result);
@@ -44,10 +44,10 @@ const run = async () => {
 
     /* replace stoke quantity */
     app.use("/stoke/:id", async (req, res) => {
-      const id = req.params;
+      const id = req.params.id;
       const filter = { _id: ObjectId(id) };
       const options = { upsert: true };
-      const updateQuantity = req?.body?.quantity;
+      const updateQuantity = req?.body;
       const updateDoc = {
         $set: updateQuantity,
       };
