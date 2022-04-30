@@ -60,6 +60,12 @@ const run = async () => {
       const result = await stokeCollection.findOne(query);
       res.send(result);
     });
+    /* add a new data/stock in database */
+    app.put("/stoke", async (req, res) => {
+      const stock = req.body;
+      const result = await stokeCollection.insertOne(stock);
+      res.send(result);
+    });
 
     /* update a stoke */
     app.put("/stoke/:id", async (req, res) => {
