@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
@@ -63,8 +64,16 @@ const run = async () => {
     /* add a new data/stock in database */
     app.put("/stoke", async (req, res) => {
       const stock = req.body;
+      const accessToken = req.headers.authorization;
+      console.log(accessToken);
       const result = await stokeCollection.insertOne(stock);
       res.send(result);
+    });
+    /* generate jwt token */
+    app.post("/login", (req, res) => {
+      const email = req.body;
+      const token = jwt.sign(email, process.env.SECRET_KEY);
+      res.send({ token });
     });
 
     /* update a stoke */
