@@ -76,7 +76,7 @@ const run = async () => {
       const tokenInfo = req.headers.authorization;
       const [email, accessToken] = tokenInfo?.split(" ");
       const decoded = verifyToken(accessToken);
-      console.log(email);
+      console.log(accessToken);
       if (email === decoded.email) {
         const addedItem = await myCollection.find({ email: email }).toArray();
         res.send(addedItem);
@@ -87,6 +87,7 @@ const run = async () => {
     app.post("/login", (req, res) => {
       const email = req.body;
       const token = jwt.sign(email, process.env.SECRET_KEY);
+      console.log(token);
       res.send({ token });
     });
 
