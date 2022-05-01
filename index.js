@@ -87,7 +87,7 @@ const run = async () => {
     app.post("/login", (req, res) => {
       const email = req.body;
       const token = jwt.sign(email, process.env.SECRET_KEY);
-      console.log(token);
+      // console.log(token);
       res.send({ token });
     });
 
@@ -113,6 +113,12 @@ const run = async () => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await stokeCollection.deleteOne(query);
+      res.send(result);
+    });
+    app.delete("/myItem/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await myCollection.deleteOne(query);
       res.send(result);
     });
   } finally {
