@@ -27,6 +27,7 @@ const run = async () => {
   try {
     await client.connect();
     const stokeCollection = client.db("stokedb").collection("stoke");
+    const myCollection = client.db("addDb").collection("myStoke");
     /* get 6 data from database */
     app.get("/stoke", async (req, res) => {
       const query = {};
@@ -62,13 +63,26 @@ const run = async () => {
       res.send(result);
     });
     /* add a new data/stock in database */
-    app.put("/stoke", async (req, res) => {
+    app.put("/addStoke", async (req, res) => {
       const stock = req.body;
-      const accessToken = req.headers.authorization;
-      console.log(accessToken);
-      const result = await stokeCollection.insertOne(stock);
+      const tokenInfo = req.headers.authorization;
+      const [email, accessToken] = tokenInfo.split(" ");
+      let decoded = verifyToken(accessToken);
+      const result = await myCollection.insertOne(stock);
       res.send(result);
     });
+    /* get user selected stock */
+    app.get("/myStock", async (req, res) => {
+      const tokenInfo = req.headers.authorization;
+      const [email, accessToken] = tokenInfo?.split(" ");
+      const decoded = verifyToken(accessToken);
+      console.log(email);
+      if (email === decoded.email) {
+        const addedItem = await myCollection.find({ email: email }).toArray();
+        res.send(addedItem);
+      }
+    });
+
     /* generate jwt token */
     app.post("/login", (req, res) => {
       const email = req.body;
@@ -109,3 +123,17 @@ run().catch(console.dir);
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+/* verify token */
+const verifyToken = (token) => {
+  let email;
+  jwt.verify(token, process.env.SECRET_KEY, function (err, decoded) {
+    if (err) {
+      email = "unAuthorize access";
+    }
+    if (decoded) {
+      email = decoded;
+    }
+  });
+  return email;
+};
