@@ -35,7 +35,7 @@ const run = async () => {
       const stokes = await cursor.toArray();
       res.send(stokes);
     });
-    /* get all data from database */
+    /* get all data from mongodb database */
     app.get("/manageStoke", async (req, res) => {
       const query = {};
       const page = +req.query.page;
