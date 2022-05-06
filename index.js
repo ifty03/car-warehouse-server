@@ -68,17 +68,26 @@ const run = async () => {
       const tokenInfo = req.headers.authorization;
       const [email, accessToken] = tokenInfo.split(" ");
       let decoded = verifyToken(accessToken);
-      const result = await myCollection.insertOne(stock);
+      const result = await stokeCollection.insertOne(stock); /* change */
+      res.send(result);
+    });
+
+    /* set new stock item from main database */
+    app.put("/addNewItem", async (req, res) => {
+      const item = req.body;
+      const result = await stokeCollection.insertOne(item);
       res.send(result);
     });
     /* get user selected stock */
     app.get("/myStock", async (req, res) => {
       const tokenInfo = req.headers.authorization;
       const [email, accessToken] = tokenInfo?.split(" ");
-      const decoded = verifyToken(accessToken);
-      console.log(accessToken);
+      const decoded = await verifyToken(accessToken);
+      console.log(email, decoded.email);
       if (email === decoded.email) {
-        const addedItem = await myCollection.find({ email: email }).toArray();
+        const addedItem = await stokeCollection
+          .find({ email: email })
+          .toArray(); /* change */
         res.send(addedItem);
       }
     });
@@ -87,7 +96,8 @@ const run = async () => {
     app.post("/login", (req, res) => {
       const email = req.body;
       const token = jwt.sign(email, process.env.SECRET_KEY);
-      // console.log(token);
+      console.log(token);
+      console.log(email);
       res.send({ token });
     });
 
@@ -118,7 +128,7 @@ const run = async () => {
     app.delete("/myItem/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const result = await myCollection.deleteOne(query);
+      const result = await stokeCollection.deleteOne(query); /* change */
       res.send(result);
     });
   } finally {
@@ -140,6 +150,7 @@ const verifyToken = (token) => {
     }
     if (decoded) {
       email = decoded;
+      console.log("decoded email", decoded.email);
     }
   });
   return email;
