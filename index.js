@@ -72,12 +72,6 @@ const run = async () => {
       res.send(result);
     });
 
-    /* set new stock item from main database */
-    app.put("/addNewItem", async (req, res) => {
-      const item = req.body;
-      const result = await stokeCollection.insertOne(item);
-      res.send(result);
-    });
     /* get user selected stock */
     app.get("/myStock", async (req, res) => {
       const tokenInfo = req.headers.authorization;
@@ -123,12 +117,6 @@ const run = async () => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const result = await stokeCollection.deleteOne(query);
-      res.send(result);
-    });
-    app.delete("/myItem/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const result = await stokeCollection.deleteOne(query); /* change */
       res.send(result);
     });
   } finally {
