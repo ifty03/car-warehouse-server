@@ -10,7 +10,7 @@ require("dotenv").config();
 app.use(cors());
 app.use(express.json());
 
-/* all HTTP requests */
+/* all HTTP requests for api*/
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
